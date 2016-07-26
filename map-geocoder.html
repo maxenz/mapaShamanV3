@@ -1,0 +1,182 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>HTML5 Structure</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	    <style>
+	      html, body {
+	        height: 100%;
+	        margin: 0;
+	        padding: 0;
+	      }
+	      #map {
+	        height: 100%;
+	      }
+	    </style>
+	</head>
+	<body>
+
+		<div id="map"></div>
+
+		<script>
+
+			var map;
+			var markers = [];
+
+			/////////////// Funciones ///////////////
+
+			/**
+			 * Obtengo dato de querystring
+			 * @param {string} name
+			 * @return {string} getParameterByName 
+			 */
+			function getParameterByName(name) {
+			    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			        results = regex.exec(location.search);
+			    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+
+			/**
+			 * Obtengo todos los datos que necesito de querystring
+			 * @return {Object} getQueryParameters 
+			 */
+			function getQueryParameters() {
+				var obj = {};
+				obj.prmWidth = getParameterByName('width');
+				obj.prmHeight = getParameterByName('height');
+				obj.prmLatitude = getParameterByName('latitude');
+				obj.prmLongitude = getParameterByName('longitude');
+
+				return obj;
+			}
+
+			/**
+			 * Inicializo el mapa
+			 * @param {Object} queryParameters 
+			 */
+			function initMap(queryParameters) {
+				var myLatLng;
+				var objMap = document.getElementById('map')
+
+				// --> Si tengo parametros de width y height en la url, los uso para centrar ahi el mapa
+				// --> Si no hay nada, centro el mapa en buenos aires
+				if (queryParameters.prmLatitude !== "" && queryParameters.prmLongitude !== "") {
+					myLatLng = {lat: parseFloat(queryParameters.prmLatitude), lng: parseFloat(queryParameters.prmLongitude)};
+				} else {
+					myLatLng = {lat: -34.603792, lng: -58.381796};
+				}
+
+				// --> Seteo el mapa y sus dimensiones
+				map = new google.maps.Map(objMap, {
+					center : myLatLng,
+					zoom : 13
+				});
+
+				objMap.style.width = queryParameters.prmWidth;
+				objMap.style.height = queryParameters.prmHeight;
+
+				// --> Agrego el marcador centrado en el mapa
+				addMarker(myLatLng);
+
+				// --> Listener de click en mapa. Agrego marcador y borro los demás
+				map.addListener('click', function(event) {
+				 	setMapOnAll(null);
+    				addMarker(event.latLng);
+  				});
+
+				// --> Genero el boton para confirmar la posición a enviar al servidor
+				var centerControlDiv = document.createElement('div');
+  				var centerControl = new CenterControl(centerControlDiv, map);
+  				centerControlDiv.index = 1;
+  				map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(centerControlDiv);
+
+			}
+
+
+			/**
+			 * Agrega un marcador al mapa
+			 * @param {Object} latlng 
+			 */
+			function addMarker(location) {
+			  	var marker = new google.maps.Marker({
+			    	position: location,
+			    	map: map
+			  	});
+
+			  	markers.push(marker);
+			}
+
+
+			/**
+			 * Seteo en el mapa lo que haya en markers
+			 * @param {Object} map 
+			 */
+			function setMapOnAll(map) {
+  				for (var i = 0; i < markers.length; i++) {
+    				markers[i].setMap(map);
+  				}
+			}
+
+
+			/**
+			 * Inicializo los parametros que vienen por querystring.
+			 * Inicializo el mapa con la configuración requerida
+			 * @param {Object} map 
+			 */
+			function activate() {
+				var queryParameters = getQueryParameters();
+				initMap(queryParameters);
+			}
+
+
+			/**
+			 * Genero botón para confirmar posición a enviar
+			 * @param {obj} controlDiv
+			 * @param {obj} map 
+			 */
+			function CenterControl(controlDiv, map) {
+
+				// Seteo el css para el border del botón
+				var controlUI = document.createElement('div');
+				controlUI.style.backgroundColor = '#fff';
+				controlUI.style.border = '2px solid #fff';
+				controlUI.style.borderRadius = '3px';
+				controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+				controlUI.style.cursor = 'pointer';
+				controlUI.style.marginBottom = '22px';
+				controlUI.style.textAlign = 'center';
+				controlUI.title = 'Haga click para confirmar esta posición';
+				controlDiv.appendChild(controlUI);
+
+				// Seteo el css para el inner del botón
+				var controlText = document.createElement('div');
+				controlText.style.color = 'rgb(25,25,25)';
+				controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+				controlText.style.fontSize = '16px';
+				controlText.style.lineHeight = '38px';
+				controlText.style.paddingLeft = '5px';
+				controlText.style.paddingRight = '5px';
+				controlText.innerHTML = 'Confirmar posición';
+				controlUI.appendChild(controlText);
+
+				// --> Agrego listener de click de boton confirmar posición
+				controlUI.addEventListener('click', function() {
+					if (markers.length > 0) {
+						var selectedLatitude = markers[0].position.lat();
+						var selectedLongitude = markers[1].position.lng();
+					}					
+				});
+
+			}
+
+		</script>
+		<script src="./jquery-1.11.13.min.js"></script>
+		<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoqo_PtE7HuI_2WCF_XqMTXweuqNaq_pQ&signed_in=true&callback=activate"></script>
+	</body>
+</html>
