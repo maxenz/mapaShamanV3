@@ -2,15 +2,15 @@
 <html>
 <head>
 
-  <meta http-equiv="X-UA-Compatible" content="IE=7,8,9" />
+  <meta http-equiv="X-UA-Compatible" content="IE=7,8,9,10" />
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <style type="text/css">
   html { height: 100% }
   body { height: 100%; margin: 0px; padding: 0px }
   #map_canvas { height: 100% }
   </style>
-  <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
-  <script type="text/javascript" src="https://cdn.rawgit.com/googlemaps/v3-utility-library/master/infobox/src/infobox.js"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCgGOZyoyPNYnpqnmUR4NbLsRDowF-sYG8"></script>
+<script type="text/javascript" src="https://cdn.rawgit.com/googlemaps/v3-utility-library/master/infobox/src/infobox.js"></script>
 
   <script type="text/javascript">
   function obtP( name ){
@@ -35,11 +35,11 @@
 
   var paramH = obtP( 'H' );
   var paramW = obtP( 'W' );
-  document.write('<div id="map" style="width:'+paramW+'px ; height:'+paramH+'px; margin-top:-15px; margin-left:-9px; overflow:hidden;"></div>');
+  document.write('<div id="map" style="width:'+ paramW + 'px ; height:' + paramH + 'px; margin-top:-15px; margin-left:-9px;overflow:hidden;"></div>');
 
   var gmarkers = [];
   var i = 0;
-  var latlng = new google.maps.LatLng(-34.603365,-58.379416);
+  var latlng = new google.maps.LatLng('-34.603365','-58.379416');
 
   var myOptions = {
     zoom: 11,
@@ -51,26 +51,25 @@
   var gmarkers = [];
 
 
-  function setMarkers(imagen,shadow,iconSizeW,iconSizeH,shadowSizeW,shadowSizeH,iconAnchorX,iconAnchorY,infoWindowAnchorX,infoWindowAnchorY,leyenda,point) {
+	function setMarkers(imagen,shadow,iconSizeW,iconSizeH,shadowSizeW,shadowSizeH,iconAnchorX,iconAnchorY,infoWindowAnchorX,infoWindowAnchorY,leyenda,point) {
 
-    var image = new google.maps.MarkerImage(imagen,
+		var image = new google.maps.MarkerImage(imagen,
 
-      new google.maps.Size(20, 32),
+			new google.maps.Size(20, 32),
+			new google.maps.Point(0,0),
+			new google.maps.Point(0, 32)
+		);
 
-      new google.maps.Point(0,0),
-
-      new google.maps.Point(0, 32));
-
-      var shadow = new google.maps.MarkerImage(shadow,
-        new google.maps.Size(37, 32),
-        new google.maps.Point(0,0),
-        new google.maps.Point(0, 32));
+		var shadow = new google.maps.MarkerImage(shadow,
+			new google.maps.Size(37, 32),
+			new google.maps.Point(0,0),
+			new google.maps.Point(0, 32)
+		);
 
         var shape = {
           coord: [1, 1, 1, 20, 18, 20, 18 , 1],
           type: 'poly'
         };
-
 
         var myLatLng = point;
         var marker = new google.maps.Marker({
@@ -83,54 +82,53 @@
           zIndex: 1
         });
 
+               // var boxText = document.createElement("div");
+        // boxText.style.cssText = "border: 2px solid black; margin-top: 8px; background: white; text-align:center ;font-weight:bold; height:50px; padding: 5px;";
+        // boxText.innerHTML = leyenda;
 
+        // var myOptions = {
+          // content: boxText
+          // ,disableAutoPan: false
+          // ,maxWidth: 0
+		  // ,alignBottom: true
+          // //,pixelOffset: new google.maps.Size(-140, 0)
+          // ,zIndex: null
+          // ,boxStyle: {
+            // opacity: 0.75
+            // ,width: "280px"
+          // }
+          // ,closeBoxMargin: "10px 2px 2px 2px"
+          // ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
+          // ,infoBoxClearance: new google.maps.Size(1, 1)
+          // ,isHidden: false
+          // ,pane: "floatPane"
+          // ,enableEventPropagation: false
+        // };
 
-        var boxText = document.createElement("div");
-        boxText.style.cssText = "border: 2px solid black; margin-top: 8px; background: white; text-align:center ;font-weight:bold; height:50px; padding: 5px;";
-        boxText.innerHTML = leyenda;
+        // google.maps.event.addListener(marker, "click", function(event) {
 
-        var myOptions = {
-          content: boxText
-          ,disableAutoPan: false
-          ,maxWidth: 0
-          ,pixelOffset: new google.maps.Size(-140, 0)
-          ,zIndex: null
-          ,boxStyle: {
-            opacity: 0.75
-            ,width: "280px"
-          }
-          ,closeBoxMargin: "10px 2px 2px 2px"
-          ,closeBoxURL: "http://www.google.com/intl/en_us/mapfiles/close.gif"
-          ,infoBoxClearance: new google.maps.Size(1, 1)
-          ,isHidden: false
-          ,pane: "floatPane"
-          ,enableEventPropagation: false
-        };
+          // if (ib == undefined) {
 
-        google.maps.event.addListener(marker, "click", function(event) {
+            // ib = new InfoBox(myOptions);
+            // ib.open(map,this);
 
-          if (ib == undefined) {
+          // } else {
 
-            ib = new InfoBox(myOptions);
-            ib.open(map,this);
+            // ib.close();
+            // ib = new InfoBox(myOptions);
+            // ib.open(map,this);
 
-          } else {
+          // }
 
-            ib.close();
-            ib = new InfoBox(myOptions);
-            ib.open(map,this);
-
-          }
-
-        });
+        // });
       }
 
       function Save() {
-        var mapzoom=map.getZoom();
-        var mapcenter=map.getCenter();
-        var maplat=mapcenter.lat();
-        var maplng=mapcenter.lng();
-        var cookiestring=maplat+"_"+maplng+"_"+mapzoom;
+        var mapzoom	= map.getZoom();
+        var mapcenter =	map.getCenter();
+        var maplat = mapcenter.lat();
+        var maplng = mapcenter.lng();
+        var cookiestring = maplat + "_" + maplng + "_" + mapzoom;
         var exp = new Date();
         exp.setTime(exp.getTime() + (1000 * 60 * 60 * 24 * 30));
         setCookie("mapShaman",cookiestring, exp);
@@ -142,13 +140,13 @@
       }
 
       function getCookie(c_name) {
-        if (document.cookie.length>0) {
-          c_start=document.cookie.indexOf(c_name + "=");
-          if (c_start!=-1) {
-            c_start=c_start + c_name.length + 1;
-            c_end=document.cookie.indexOf(";",c_start);
-            if (c_end==-1) {
-              c_end=document.cookie.length;
+        if (document.cookie.length > 0) {
+          c_start = document.cookie.indexOf(c_name + "=");
+          if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";",c_start);
+            if (c_end == -1) {
+              c_end = document.cookie.length;
             }
             return unescape(document.cookie.substring(c_start,c_end));
           }
@@ -158,17 +156,18 @@
 
       function readMap() {
 
-        var loadedstring=getCookie("mapShaman");
+        var loadedstring = getCookie("mapShaman");
         var zoom = 11;
 
-        if (loadedstring != null)
-        {
-          var splitstr = loadedstring.split("_");
-          if (parseFloat(splitstr[2]) != NaN)
+         if (loadedstring != null)
+         {
+           var splitstr = loadedstring.split("_");
+		   
+          if (!isNaN(splitstr[2]))
           {
             zoom  = parseFloat(splitstr[2]);
           }
-        }
+         }
 
         <?php
 
@@ -207,8 +206,8 @@
 
           ?>
 
-          var lat = <?php echo $lat;?>;
-          var lng = <?php echo $lng;?>;
+          var lat = '<?php echo $lat;?>';
+          var lng = '<?php echo $lng;?>';
           var leyenda = '<?php echo $leyenda;?>';
           var imagen = '<?php echo $imagen;?>';
           var shadow = '<?php echo $shadow;?>';
@@ -223,11 +222,6 @@
           var flgCenter = <?php echo $flgCenter;?>;
           if (flgCenter === 1) {
 
-            if (splitstr[2] === NaN) {
-
-              splitstr[2] = 11;
-            }
-
             map.setCenter(new google.maps.LatLng(lat,lng));
             map.setZoom(zoom);
 
@@ -236,8 +230,7 @@
 
           var point = new google.maps.LatLng(lat,lng);
 
-          setMarkers(imagen,shadow,iconSizeW,iconSizeH,shadowSizeW,shadowSizeH,iconAnchorX,
-            iconAnchorY,infoWindowAnchorX,infoWindowAnchorY,leyenda,point);
+          setMarkers(imagen,shadow,iconSizeW,iconSizeH,shadowSizeW,shadowSizeH,iconAnchorX,iconAnchorY,infoWindowAnchorX,infoWindowAnchorY,leyenda,point);
 
 
             <?php
